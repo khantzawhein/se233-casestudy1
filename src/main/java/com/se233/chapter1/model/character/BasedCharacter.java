@@ -3,6 +3,7 @@ package com.se233.chapter1.model.character;
 import com.se233.chapter1.model.DamageType;
 import com.se233.chapter1.model.item.Armor;
 import com.se233.chapter1.model.item.Weapon;
+import javafx.scene.layout.Pane;
 
 public class BasedCharacter {
     protected String name, imgpath;
@@ -48,5 +49,16 @@ public class BasedCharacter {
 
     public DamageType getType() {
         return type;
+    }
+
+    public void equipWeapon(Weapon weapon) {
+        this.weapon = weapon;
+        this.power = this.basedPow + weapon.getPower();
+    }
+
+    public void equipArmor(Armor armor) {
+        this.armor = armor;
+        this.defense = this.basedDef + armor.getDefense();
+        this.resistance = this.basedRes + armor.getResistance();
     }
 }

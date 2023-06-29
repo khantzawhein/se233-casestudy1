@@ -73,6 +73,21 @@ public class Launcher extends Application {
         Launcher.equippedWeapon = equippedWeapon;
     }
 
+    public static ArrayList<BasedEquipment> getAllEquipments() {
+        return allEquipments;
+    }
+
+    public static Armor getEquippedArmor() {
+        return equippedArmor;
+    }
+
+    public static Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    public static void setAllEquipments(ArrayList<BasedEquipment> allEquipments) {
+        Launcher.allEquipments = allEquipments;
+    }
 
     public static void main(String[] args) {
         launch(args);

@@ -32,6 +32,7 @@ public class InventoryPane extends ScrollPane {
                 imageViewList[i].setOnDragDetected(mouseEvent -> {
                     AllCustomHandler.onDragDetected(mouseEvent, equipmentArray.get(finalI), imageViewList[finalI]);
                 });
+                imageViewList[i].setOnDragDone(AllCustomHandler::onEquipDone);
             }
             inventoryInfoPane.getChildren().addAll(imageViewList);
         }
