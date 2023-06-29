@@ -1,5 +1,6 @@
 package com.se233.chapter1;
 
+import com.se233.chapter1.controller.AllCustomHandler;
 import com.se233.chapter1.controller.GenCharacter;
 import com.se233.chapter1.controller.GenItemList;
 import com.se233.chapter1.model.character.BasedCharacter;
@@ -11,6 +12,7 @@ import com.se233.chapter1.view.EquipPane;
 import com.se233.chapter1.view.InventoryPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -35,7 +37,7 @@ public class Launcher extends Application {
         mainCharacter = GenCharacter.setupCharacter();
         allEquipments = GenItemList.setUpItemList();
         Pane mainPane = this.getMainPane();
-        mainScene = new Scene(mainPane);
+        mainScene = new Scene(mainPane, 330, 500);
         primaryStage.setScene(mainScene);
     }
 
@@ -44,6 +46,12 @@ public class Launcher extends Application {
         characterPane = new CharacterPane();
         equipPane = new EquipPane();
         inventoryPane = new InventoryPane();
+        equipPane.setOnDragOver(dropEvent -> {
+            dropEvent.acceptTransferModes(TransferMode.MOVE);
+        });
+        equipPane.setOnDragDropped(dropEvent -> {
+            dropEvent.setDropCompleted(true);
+        });
         refreshPane();
         mainPane.setCenter(characterPane);
         mainPane.setLeft(equipPane);

@@ -45,7 +45,11 @@ public class CharacterPane extends ScrollPane {
         Button genCharacter = new Button();
         genCharacter.setText("Generate Character");
         genCharacter.setOnAction(new AllCustomHandler.GenCharacterHandler());
-        characterInfoPane.getChildren().addAll(name, mainImage, type, hp, atk, def, res, genCharacter);
+
+        Button removeEquipmentBtn = new Button();
+        removeEquipmentBtn.setText("Remove Equipments");
+        removeEquipmentBtn.setOnAction(new AllCustomHandler.RemoveEquipmentBtnHandler());
+        characterInfoPane.getChildren().addAll(name, mainImage, type, hp, atk, def, res, genCharacter, removeEquipmentBtn);
         return characterInfoPane;
     }
 

@@ -12,6 +12,7 @@ public class GenItemList {
         ArrayList<BasedEquipment> itemLists = new ArrayList<>(5);
         itemLists.add(new Weapon("Sword", 10, DamageType.physical, "assets/sword.png"));
         itemLists.add(new Weapon("Gun", 15, DamageType.physical, "assets/gun.png"));
+        itemLists.add(new Weapon("Armored Stick", 13, DamageType.physical, "assets/armoredstick.png"));
         itemLists.add(new Weapon("Staff", 20, DamageType.magical, "assets/staff.png"));
         itemLists.add(new Armor("Shirt", 0, 50, "assets/shirt.png"));
         itemLists.add(new Armor("Armor", 50, 0, "assets/armor.png"));

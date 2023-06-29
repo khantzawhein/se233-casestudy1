@@ -14,13 +14,28 @@ import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class AllCustomHandler {
     public static class GenCharacterHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             Launcher.setMainCharacter(GenCharacter.setupCharacter());
+            Launcher.setEquippedWeapon(null);
+            Launcher.setEquippedArmor(null);
+            Launcher.setAllEquipments(GenItemList.setUpItemList());
+            Launcher.refreshPane();
+        }
+    }
+
+    public static class RemoveEquipmentBtnHandler implements EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Launcher.setEquippedArmor(null);
+            Launcher.setEquippedWeapon(null);
+            Launcher.getMainCharacter().removeAllEquipments();
+
+            Launcher.setAllEquipments(GenItemList.setUpItemList());
             Launcher.refreshPane();
         }
     }
@@ -37,9 +52,21 @@ public class AllCustomHandler {
     public static void onDragOver(DragEvent event, String type) {
         Dragboard dragboard = event.getDragboard();
         BasedEquipment retrievedEquipment = (BasedEquipment) dragboard.getContent(BasedEquipment.DATA_FORMAT);
-        if (dragboard.hasContent(BasedEquipment.DATA_FORMAT) && retrievedEquipment.getClass().getSimpleName().equals(type)) {
+        System.out.println(equippable(retrievedEquipment, Launcher.getMainCharacter()));
+        if (dragboard.hasContent(BasedEquipment.DATA_FORMAT) && retrievedEquipment.getClass().getSimpleName().equals(type) && equippable(retrievedEquipment, Launcher.getMainCharacter())) {
             event.acceptTransferModes(TransferMode.MOVE);
         }
+    }
+
+    protected static boolean equippable(BasedEquipment equipment, BasedCharacter character) {
+        if (equipment instanceof Armor && character.getClass().getSimpleName().equals("BattleMage")) {
+            return false;
+        }
+        if (equipment instanceof Weapon) {
+            return ((Weapon) equipment).getDamageType().equals(character.getType());
+        }
+
+        return true;
     }
 
     public static void onDragDropped(DragEvent event, Label lbl, StackPane imgGroup) {
@@ -48,28 +75,30 @@ public class AllCustomHandler {
         ArrayList<BasedEquipment> allEquipments = Launcher.getAllEquipments();
         if (dragboard.hasContent(BasedEquipment.DATA_FORMAT)) {
             BasedEquipment retrievedEquipment = (BasedEquipment) dragboard.getContent(BasedEquipment.DATA_FORMAT);
-            BasedCharacter character = Launcher.getMainCharacter();
-            if (retrievedEquipment.getClass().getSimpleName().equals("Weapon")) {
-                if (Launcher.getEquippedWeapon() != null) {
-                    allEquipments.add(Launcher.getEquippedWeapon());
+            if (equippable(retrievedEquipment, Launcher.getMainCharacter())) {
+                BasedCharacter character = Launcher.getMainCharacter();
+                if (retrievedEquipment.getClass().getSimpleName().equals("Weapon")) {
+                    if (Launcher.getEquippedWeapon() != null) {
+                        allEquipments.add(Launcher.getEquippedWeapon());
+                    }
+                    Launcher.setEquippedWeapon((Weapon) retrievedEquipment);
+                    character.equipWeapon((Weapon) retrievedEquipment);
+                } else {
+                    if (Launcher.getEquippedArmor() != null) {
+                        allEquipments.add(Launcher.getEquippedArmor());
+                    }
+                    Launcher.setEquippedArmor((Armor) retrievedEquipment);
+                    character.equipArmor((Armor) retrievedEquipment);
                 }
-                Launcher.setEquippedWeapon((Weapon) retrievedEquipment);
-                character.equipWeapon((Weapon) retrievedEquipment);
-            } else {
-                if (Launcher.getEquippedArmor() != null) {
-                    allEquipments.add(Launcher.getEquippedArmor());
+                ImageView imgView = new ImageView();
+                if (imgGroup.getChildren().size() != 1) {
+                    imgGroup.getChildren().remove(1);
+                    Launcher.refreshPane();
                 }
-                Launcher.setEquippedArmor((Armor) retrievedEquipment);
-                character.equipArmor((Armor) retrievedEquipment);
+                lbl.setText(retrievedEquipment.getClass().getSimpleName() + ":\n" + retrievedEquipment.getName());
+                imgView.setImage(new Image(Launcher.class.getResource(retrievedEquipment.getImagePath()).toString()));
+                imgGroup.getChildren().add(imgView);
             }
-            ImageView imgView = new ImageView();
-            if (imgGroup.getChildren().size() != 1) {
-                imgGroup.getChildren().remove(1);
-                Launcher.refreshPane();
-            }
-            lbl.setText(retrievedEquipment.getClass().getSimpleName() + ":\n" + retrievedEquipment.getName());
-            imgView.setImage(new Image(Launcher.class.getResource(retrievedEquipment.getImagePath()).toString()));
-            imgGroup.getChildren().add(imgView);
             dragCompleted = true;
         }
         event.setDropCompleted(dragCompleted);
@@ -81,12 +110,33 @@ public class AllCustomHandler {
         BasedEquipment retrievedEquipment = (BasedEquipment) dragboard.getContent(BasedEquipment.DATA_FORMAT);
         int eqLength = allEquipments.size();
         for (int i = 0; i < eqLength; i++) {
-            if (allEquipments.get(i).getName().equals(Launcher.getEquippedWeapon().getName()) || allEquipments.get(i).getName().equals(Launcher.getEquippedArmor().getName())) {
+            String equippedWeaponName = Launcher.getEquippedWeapon() == null ? "" : Launcher.getEquippedWeapon().getName();
+            String equippedArmorName = Launcher.getEquippedArmor() == null ? "" : Launcher.getEquippedArmor().getName();
+            if (allEquipments.get(i).getName().equals(equippedArmorName) || allEquipments.get(i).getName().equals(equippedWeaponName)) {
                 allEquipments.remove(i);
                 break;
             }
         }
         Launcher.setAllEquipments(allEquipments);
         Launcher.refreshPane();
+    }
+
+    public static void dropDoneItemFromSlot(DragEvent event, Label lbl, StackPane imgGroup) {
+        Dragboard dragboard = event.getDragboard();
+        BasedEquipment retrievedEquipment = (BasedEquipment) dragboard.getContent(BasedEquipment.DATA_FORMAT);
+
+        if (retrievedEquipment.getClass().getSimpleName().equals("Weapon")) {
+            Launcher.setEquippedWeapon(null);
+            Launcher.getMainCharacter().unequipWeapon();
+        } else {
+            Launcher.setEquippedArmor(null);
+            Launcher.getMainCharacter().unequipArmor();
+        }
+
+        Launcher.getAllEquipments().add(retrievedEquipment);
+
+        Launcher.refreshPane();
+
+
     }
 }

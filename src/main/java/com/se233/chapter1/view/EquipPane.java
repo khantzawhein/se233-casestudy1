@@ -74,6 +74,22 @@ public class EquipPane extends ScrollPane {
             AllCustomHandler.onDragDropped(dragEvent, armorLbl, armorImgGroup);
         });
 
+        weaponImgGroup.setOnDragDetected(mouseEvent -> {
+            AllCustomHandler.onDragDetected(mouseEvent, equippedWeapon, weaponImg);
+        });
+
+        weaponImgGroup.setOnDragDone(dragEvent -> {
+            AllCustomHandler.dropDoneItemFromSlot(dragEvent, weaponLbl, weaponImgGroup);
+        });
+
+        armorImgGroup.setOnDragDetected(mouseEvent -> {
+            AllCustomHandler.onDragDetected(mouseEvent, equippedArmor, armorImg);
+        });
+
+        armorImgGroup.setOnDragDone(dragEvent -> {
+            AllCustomHandler.dropDoneItemFromSlot(dragEvent, weaponLbl, armorImgGroup);
+        });
+
 
         equipmentInfoPane.getChildren().addAll(weaponLbl, weaponImgGroup, armorLbl, armorImgGroup);
         return equipmentInfoPane;

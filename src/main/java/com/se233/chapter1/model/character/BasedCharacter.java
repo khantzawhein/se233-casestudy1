@@ -61,4 +61,20 @@ public class BasedCharacter {
         this.defense = this.basedDef + armor.getDefense();
         this.resistance = this.basedRes + armor.getResistance();
     }
+
+    public void unequipWeapon() {
+        this.weapon = null;
+        this.power = this.basedPow;
+    }
+
+    public void unequipArmor() {
+        this.armor = null;
+        this.defense = this.basedDef;
+        this.resistance = this.basedRes;
+    }
+
+    public void removeAllEquipments() {
+        this.unequipWeapon();
+        this.unequipArmor();
+    }
 }
