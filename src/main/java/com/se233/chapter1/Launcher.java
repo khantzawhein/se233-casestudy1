@@ -46,10 +46,10 @@ public class Launcher extends Application {
         characterPane = new CharacterPane();
         equipPane = new EquipPane();
         inventoryPane = new InventoryPane();
-        equipPane.setOnDragOver(dropEvent -> {
+        mainPane.setOnDragOver(dropEvent -> {
             dropEvent.acceptTransferModes(TransferMode.MOVE);
         });
-        equipPane.setOnDragDropped(dropEvent -> {
+        mainPane.setOnDragDropped(dropEvent -> {
             dropEvent.setDropCompleted(true);
         });
         refreshPane();

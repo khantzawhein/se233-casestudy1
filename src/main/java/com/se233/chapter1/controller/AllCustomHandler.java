@@ -2,6 +2,7 @@ package com.se233.chapter1.controller;
 
 import com.se233.chapter1.Launcher;
 import com.se233.chapter1.model.character.BasedCharacter;
+import com.se233.chapter1.model.character.BattleMageCharacter;
 import com.se233.chapter1.model.item.Armor;
 import com.se233.chapter1.model.item.BasedEquipment;
 import com.se233.chapter1.model.item.Weapon;
@@ -52,14 +53,13 @@ public class AllCustomHandler {
     public static void onDragOver(DragEvent event, String type) {
         Dragboard dragboard = event.getDragboard();
         BasedEquipment retrievedEquipment = (BasedEquipment) dragboard.getContent(BasedEquipment.DATA_FORMAT);
-        System.out.println(equippable(retrievedEquipment, Launcher.getMainCharacter()));
         if (dragboard.hasContent(BasedEquipment.DATA_FORMAT) && retrievedEquipment.getClass().getSimpleName().equals(type) && equippable(retrievedEquipment, Launcher.getMainCharacter())) {
             event.acceptTransferModes(TransferMode.MOVE);
         }
     }
 
     protected static boolean equippable(BasedEquipment equipment, BasedCharacter character) {
-        if (equipment instanceof Armor && character.getClass().getSimpleName().equals("BattleMage")) {
+        if (equipment instanceof Armor && character instanceof BattleMageCharacter) {
             return false;
         }
         if (equipment instanceof Weapon) {
@@ -107,7 +107,6 @@ public class AllCustomHandler {
     public static void onEquipDone(DragEvent event) {
         Dragboard dragboard = event.getDragboard();
         ArrayList<BasedEquipment> allEquipments = Launcher.getAllEquipments();
-        BasedEquipment retrievedEquipment = (BasedEquipment) dragboard.getContent(BasedEquipment.DATA_FORMAT);
         int eqLength = allEquipments.size();
         for (int i = 0; i < eqLength; i++) {
             String equippedWeaponName = Launcher.getEquippedWeapon() == null ? "" : Launcher.getEquippedWeapon().getName();
