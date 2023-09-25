@@ -13,10 +13,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class AllCustomHandler {
+    static Logger logger = LogManager.getLogger(AllCustomHandler.class);
     public static class GenCharacterHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
@@ -75,6 +78,7 @@ public class AllCustomHandler {
         ArrayList<BasedEquipment> allEquipments = Launcher.getAllEquipments();
         if (dragboard.hasContent(BasedEquipment.DATA_FORMAT)) {
             BasedEquipment retrievedEquipment = (BasedEquipment) dragboard.getContent(BasedEquipment.DATA_FORMAT);
+            logger.info(retrievedEquipment.getName());
             if (equippable(retrievedEquipment, Launcher.getMainCharacter())) {
                 BasedCharacter character = Launcher.getMainCharacter();
                 if (retrievedEquipment.getClass().getSimpleName().equals("Weapon")) {
@@ -89,6 +93,7 @@ public class AllCustomHandler {
                     }
                     Launcher.setEquippedArmor((Armor) retrievedEquipment);
                     character.equipArmor((Armor) retrievedEquipment);
+
                 }
                 ImageView imgView = new ImageView();
                 if (imgGroup.getChildren().size() != 1) {
